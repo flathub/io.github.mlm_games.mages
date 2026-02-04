@@ -10,8 +10,8 @@ command: mages
 finish-args:
   - --share=ipc
   - --share=network
-  - --socket=fallback-x11
-  - --socket=wayland # Test, Portals and PipeWire might need this for screen sharing (though it didn't work previously
+  - --socket=fallback-x11 # Test, Portals and PipeWire might need this 
+  - --socket=x11
   - --device=dri
   - --socket=pulseaudio
   - --filesystem=xdg-run/pipewire-0 # Test if needed for JCEF to be able to talk to the PipeWire daemon
