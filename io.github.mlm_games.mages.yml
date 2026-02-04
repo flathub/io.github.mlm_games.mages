@@ -10,7 +10,7 @@ command: mages
 finish-args:
   - --share=ipc
   - --share=network
-  - --socket=fallback-x11 # Test, Portals and PipeWire might need this 
+  # - --socket=fallback-x11 # Test, Portals and PipeWire might need this (xwayland)
   - --socket=x11
   - --device=dri
   - --socket=pulseaudio
