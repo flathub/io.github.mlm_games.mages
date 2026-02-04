@@ -60,10 +60,11 @@ modules:
 
       # Generate Kotlin bindings
       - |
-        ./rust/uniffi-bindgen/target/release/uniffi-bindgen generate \
-          --library rust/target/release/libmages_ffi.so \
+        .cd rust
+        ./uniffi-bindgen/target/release/uniffi-bindgen generate \
+          --library target/release/libmages_ffi.so \
           --language kotlin \
-          --out-dir shared/src/commonMain/kotlin/
+          --out-dir ../shared/src/commonMain/kotlin/
 
       # Copy native library for JNA
       - |
