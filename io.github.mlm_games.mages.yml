@@ -11,9 +11,12 @@ finish-args:
   - --share=ipc
   - --share=network
   - --socket=x11
-  # - --socket=fallback-x11
+  - --socket=wayland # Test, Portals and PipeWire might need this for screen sharing (though it didn't work previously
   - --device=dri
+  - --device=video0 # Need targeted camera access (can't use portal api)
   - --socket=pulseaudio
+  - --filesystem=xdg-run/pipewire-0 # Test if needed for JCEF to be able to talk to the PipeWire daemon
+  - --system-talk-name=org.freedesktop.portal.Desktop # test for screen capture
   - --filesystem=xdg-download
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.freedesktop.secrets
@@ -37,8 +40,8 @@ modules:
     buildsystem: simple
     sources:
       - type: archive
-        url: https://github.com/mlm-games/mages/releases/download/2.3.6/mages-2.3.6-vendored-sources.tar.gz
-        sha256: 0a8ea32248f2c451da14345a947c467a825701abb8a72c2c626c1d7388a13538
+        url: https://github.com/mlm-games/mages/releases/download/2.4.3/mages-2.4.3-vendored-sources.tar.gz
+        sha256: 57f95652abc8c004a434b1f84e9a01400824bdf136b1b766f28d2ea3a3697224
         strip-components: 1
 
     build-commands:
