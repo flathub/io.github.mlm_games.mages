@@ -38,7 +38,7 @@ modules:
     sources:
       - type: archive
         url: https://github.com/mlm-games/mages/releases/download/2.3.6/mages-2.3.6-vendored-sources.tar.gz
-        sha256: c64a02b3141a44e26c4040f924c32a408d0bffacba4e5cec4869a18cd8a5301f
+        sha256: 0a8ea32248f2c451da14345a947c467a825701abb8a72c2c626c1d7388a13538
         strip-components: 1
 
     build-commands:
