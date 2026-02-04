@@ -14,8 +14,6 @@ finish-args:
   - --socket=x11
   - --device=dri
   - --socket=pulseaudio
-  - --filesystem=xdg-run/pipewire-0 # Test if needed for JCEF to be able to talk to the PipeWire daemon
-  - --system-talk-name=org.freedesktop.portal.Desktop # test for screen capture
   - --filesystem=xdg-download
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.freedesktop.secrets
@@ -42,6 +40,11 @@ modules:
         url: https://github.com/mlm-games/mages/releases/download/2.4.3/mages-2.4.3-vendored-sources.tar.gz
         sha256: 57f95652abc8c004a434b1f84e9a01400824bdf136b1b766f28d2ea3a3697224
         strip-components: 1
+        x-checker-data:
+          type: github
+          user-repo: mlm-games/mages
+          tag-pattern: ^([0-9.]+)$
+          url-template: https://github.com/mlm-games/mages/releases/download/$version/mages-$version-vendored-sources.tar.gz
 
     build-commands:
       # Setup Cargo to use vendored sources
