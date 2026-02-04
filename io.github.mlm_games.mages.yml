@@ -10,7 +10,7 @@ command: mages
 finish-args:
   - --share=ipc
   - --share=network
-  - --socket=x11
+  - --socket=fallback-x11
   - --socket=wayland # Test, Portals and PipeWire might need this for screen sharing (though it didn't work previously
   - --device=dri
   - --device=video0 # Need targeted camera access (can't use portal api)
