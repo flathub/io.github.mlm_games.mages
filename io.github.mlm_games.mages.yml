@@ -60,7 +60,7 @@ modules:
 
       # Generate Kotlin bindings
       - |
-        .cd rust
+        cd rust
         ./uniffi-bindgen/target/release/uniffi-bindgen generate \
           --library target/release/libmages_ffi.so \
           --language kotlin \
