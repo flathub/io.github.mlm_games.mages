@@ -47,8 +47,13 @@ modules:
           url-template: https://github.com/mlm-games/mages/releases/download/$version/mages-$version-vendored-sources.tar.gz
 
       - type: script
-        dest-filename: build-mages.sh
+        dest-filename: mages
         commands:
+          - export PATH=/app/lib/mages/lib/runtime/bin:$PATH
+          - 'exec /app/lib/mages/AppRun "$@"'
+          
+
+    build-commands:
           # Setup Cargo to use vendored sources
           - mkdir -p cargo
           - cp -r .cargo/* cargo/ 2>/dev/null || true
@@ -94,21 +99,8 @@ modules:
           - mkdir -p /app/lib/mages
           - cp -r desktopApp/build/compose/binaries/main/app/Mages/* /app/lib/mages/
 
-          # Create launcher script
-          - mkdir -p /app/bin
-          - |
-            cat > /app/bin/mages << 'EOF'
-            #!/bin/bash
-            export PATH=/app/lib/mages/lib/runtime/bin:$PATH
-            exec /app/lib/mages/bin/Mages "$@"
-            EOF
-          - chmod +x /app/bin/mages
+          - install -Dm755 mages ${FLATPAK_DEST}/bin/mages
 
-          # Install metadata
           - install -Dm644 fastlane/metadata/android/en-US/images/icon.png /app/share/icons/hicolor/512x512/apps/${FLATPAK_ID}.png
           - install -Dm644 packaging/${FLATPAK_ID}.desktop /app/share/applications/${FLATPAK_ID}.desktop
           - install -Dm644 packaging/${FLATPAK_ID}.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
-
-    build-commands:
-      - chmod +x build-mages.sh
-      - ./build-mages.sh
