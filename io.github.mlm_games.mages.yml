@@ -89,8 +89,7 @@ modules:
                 ;;
             esac
             
-            mkdir -p "shared/src/jvmMain/resources/$JNA_DIR"
-            cp rust/target/release/libmages_ffi.so "shared/src/jvmMain/resources/$JNA_DIR/"
+            install -D rust/target/release/libmages_ffi.so -t "shared/src/jvmMain/resources/$JNA_DIR/"
 
           # Build desktop app with Gradle (offline)
           - ./gradlew :desktopApp:createDistributable --offline --no-daemon
