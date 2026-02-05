@@ -46,57 +46,64 @@ modules:
           tag-pattern: ^([0-9.]+)$
           url-template: https://github.com/mlm-games/mages/releases/download/$version/mages-$version-vendored-sources.tar.gz
 
-    build-commands:
-      # Setup Cargo to use vendored sources
-      - |
-        mkdir -p cargo
-        cp -r .cargo/* cargo/ 2>/dev/null || true
-        cat cargo/config.toml
+      - type: script
+        dest-filename: build-mages.sh
+        commands:
+          # Setup Cargo to use vendored sources
+          - mkdir -p cargo
+          - cp -r .cargo/* cargo/ 2>/dev/null || true
+          - cat cargo/config.toml
 
-      # Build uniffi-bindgen
-      - |
-        cd rust/uniffi-bindgen
-        cargo build --release --offline
+          # Build uniffi-bindgen
+          - cd rust/uniffi-bindgen && cargo build --release --offline
 
-      # Build Rust library
-      - |
-        cd rust
-        cargo build --release --offline
+          # Build Rust library
+          - cd rust && cargo build --release --offline
 
-      # Generate Kotlin bindings
-      - |
-        cd rust
-        ./uniffi-bindgen/target/release/uniffi-bindgen generate \
-          --library target/release/libmages_ffi.so \
-          --language kotlin \
-          --out-dir ../shared/src/commonMain/kotlin/
+          # Generate Kotlin bindings
+          - |
+            cd rust
+            ./uniffi-bindgen/target/release/uniffi-bindgen generate \
+              --library target/release/libmages_ffi.so \
+              --language kotlin \
+              --out-dir ../shared/src/commonMain/kotlin/
 
-      # Copy native library for JNA
-      - |
-        mkdir -p shared/src/jvmMain/resources/linux-x86-64
-        mkdir -p shared/src/jvmMain/resources/linux-aarch64
-        cp rust/target/release/libmages_ffi.so shared/src/jvmMain/resources/linux-x86-64/
-        cp rust/target/release/libmages_ffi.so shared/src/jvmMain/resources/linux-aarch64/
+          # Copy native library (based on arch)
+          - |
+            case "$FLATPAK_ARCH" in
+              "x86_64")
+                JNA_DIR="linux-x86-64"
+                ;;
+              "aarch64")
+                JNA_DIR="linux-aarch64"
+                ;;
+              *)
+                echo "Unsupported architecture: $FLATPAK_ARCH"
+                exit 1
+                ;;
+            esac
+            
+            mkdir -p "shared/src/jvmMain/resources/$JNA_DIR"
+            cp rust/target/release/libmages_ffi.so "shared/src/jvmMain/resources/$JNA_DIR/"
 
-      # Build desktop app with Gradle (offline)
-      - |
-        ./gradlew :desktopApp:createDistributable --offline --no-daemon
+          # Build desktop app with Gradle (offline)
+          - ./gradlew :desktopApp:createDistributable --offline --no-daemon
 
-      # Install to /app
-      - |
-        mkdir -p /app/lib/mages
-        cp -r desktopApp/build/compose/binaries/main/app/Mages/* /app/lib/mages/
+          # Install to /app
+          - mkdir -p /app/lib/mages
+          - cp -r desktopApp/build/compose/binaries/main/app/Mages/* /app/lib/mages/
 
-      # Create launcher script
-      - |
-        mkdir -p /app/bin
-        cat > /app/bin/mages << 'EOF'
-        #!/bin/bash
-        export PATH=/app/lib/mages/lib/runtime/bin:$PATH
-        exec /app/lib/mages/bin/Mages "$@"
-        EOF
-        chmod +x /app/bin/mages
+          # Create launcher script
+          - mkdir -p /app/bin
+          - |
+            cat > /app/bin/mages << 'EOF'
+            #!/bin/bash
+            export PATH=/app/lib/mages/lib/runtime/bin:$PATH
+            exec /app/lib/mages/bin/Mages "$@"
+            EOF
+          - chmod +x /app/bin/mages
 
-      - install -Dm644 fastlane/metadata/android/en-US/images/icon.png /app/share/icons/hicolor/512x512/apps/${FLATPAK_ID}.png
-      - install -Dm644 packaging/${FLATPAK_ID}.desktop /app/share/applications/${FLATPAK_ID}.desktop
-      - install -Dm644 packaging/${FLATPAK_ID}.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
+          # Install metadata
+          - install -Dm644 fastlane/metadata/android/en-US/images/icon.png /app/share/icons/hicolor/512x512/apps/${FLATPAK_ID}.png
+          - install -Dm644 packaging/${FLATPAK_ID}.desktop /app/share/applications/${FLATPAK_ID}.desktop
+          - install -Dm644 packaging/${FLATPAK_ID}.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
