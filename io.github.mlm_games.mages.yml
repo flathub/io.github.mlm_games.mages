@@ -37,8 +37,8 @@ modules:
     buildsystem: simple
     sources:
       - type: archive
-        url: https://github.com/mlm-games/mages/releases/download/2.4.3/mages-2.4.3-vendored-sources.tar.gz
-        sha256: 57f95652abc8c004a434b1f84e9a01400824bdf136b1b766f28d2ea3a3697224
+        url: https://github.com/mlm-games/mages/releases/download/2.4.4/mages-2.4.4-vendored-sources.tar.gz
+        sha256: 2f90ee19465ac09e087412f183b98d1cfcdca0fb586f6ea10e1f2a858ae42e4c
         strip-components: 1
         x-checker-data:
           type: github
@@ -97,7 +97,6 @@ modules:
         EOF
         chmod +x /app/bin/mages
 
-      # Install metadata
       - install -Dm644 fastlane/metadata/android/en-US/images/icon.png /app/share/icons/hicolor/512x512/apps/${FLATPAK_ID}.png
       - install -Dm644 packaging/${FLATPAK_ID}.desktop /app/share/applications/${FLATPAK_ID}.desktop
       - install -Dm644 packaging/${FLATPAK_ID}.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
