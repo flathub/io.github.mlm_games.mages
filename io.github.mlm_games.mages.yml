@@ -50,7 +50,7 @@ modules:
         dest-filename: mages
         commands:
           - export PATH=/app/lib/mages/lib/runtime/bin:$PATH
-          - 'exec /app/lib/mages/AppRun "$@"'
+          - 'exec /app/lib/mages/bin/Mages "$@"'
           
 
     build-commands:
