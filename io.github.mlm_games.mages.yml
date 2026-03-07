@@ -38,7 +38,7 @@ modules:
     sources:
       - type: archive
         url: https://github.com/mlm-games/Mages/releases/download/4.1.2/mages-4.1.2-vendored-sources.tar.gz
-        sha256: 6fc2782ed55a3c94f3375de4eff3a31644589beff722c864b8d4e0a86484795e
+        sha256: d34306a4dbf1e5ce3a3dd37b8b675294df1cac52d585036d089128b675cd0b33
         strip-components: 1
         x-checker-data:
           type: json
