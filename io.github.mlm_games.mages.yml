@@ -37,8 +37,8 @@ modules:
     buildsystem: simple
     sources:
       - type: archive
-        url: https://github.com/mlm-games/Mages/releases/download/4.4.6/mages-4.4.6-vendored-sources.tar.gz
-        sha256: d8ea65d92343a66a9c772b905c2547cacf5a10c0d5676ba1afacb127c2889057
+        url: https://github.com/mlm-games/Mages/releases/download/4.5.7/mages-4.5.7-vendored-sources.tar.gz
+        sha256: 635b258249631efec6b5ccfecf17e878a0e4971ebbd5f3e32ff2312f86362471
         strip-components: 1
         x-checker-data:
           type: json
