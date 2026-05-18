@@ -95,7 +95,7 @@ modules:
         install -D rust/target/release/libmages_ffi.so -t "shared/src/jvmMain/resources/$JNA_DIR/"
 
           # Build desktop app with Gradle (offline)
-      - ./gradlew :desktopApp:createDistributable --offline --no-daemon
+      - ./gradlew :desktopApp:createDistributable --offline --no-daemon --no-configuration-cache
 
           # Install to /app
       - mkdir -p /app/lib/mages
