@@ -58,51 +58,59 @@ modules:
           - exec /app/lib/mages/bin/Mages "$@"
 
     build-commands:
+          # Setup Cargo to use vendored sources
       - mkdir -p cargo
       - cp -r .cargo/* cargo/ 2>/dev/null || true
-      - |
-        if [ -f cargo/config.toml ]; then
-          sed -i 's|directory = "vendor"|directory = "../vendor"|g' cargo/config.toml || true
-          cat cargo/config.toml
-        fi
+      - cat cargo/config.toml
 
-      # Sanity: both JDKs visible to the build
-      - |
-        echo "=== JDK 21 ===" && /usr/lib/sdk/openjdk21/jvm/openjdk-21/bin/java -version
-        echo "=== JDK 25 ===" && /usr/lib/sdk/openjdk25/jvm/openjdk-25/bin/java -version
-        ls -la /usr/lib/sdk/openjdk21/jvm/openjdk-21 /usr/lib/sdk/openjdk25/jvm/openjdk-25
-
+          # Build uniffi-bindgen
       - pushd rust/uniffi-bindgen && cargo build --release --offline && popd
+
+          # Build Rust library
       - pushd rust && cargo build --release --offline && popd
 
+          # Generate Kotlin bindings
       - |
         pushd rust
         ./uniffi-bindgen/target/release/uniffi-bindgen generate \
           --library target/release/libmages_ffi.so \
           --language kotlin \
-          --config uniffi.jvm.toml \
-          --out-dir ../shared/src/jvmMain/kotlin/
+          --out-dir ../shared/src/commonMain/kotlin/
         popd
 
+          # Copy native library (based on arch)
       - |
         case "$FLATPAK_ARCH" in
-          "x86_64") JNA_DIR="linux-x86-64" ;;
-          "aarch64") JNA_DIR="linux-aarch64" ;;
-          *) echo "Unsupported architecture: $FLATPAK_ARCH"; exit 1 ;;
+          "x86_64")
+            JNA_DIR="linux-x86-64"
+            ;;
+          "aarch64")
+            JNA_DIR="linux-aarch64"
+            ;;
+          *)
+            echo "Unsupported architecture: $FLATPAK_ARCH"
+            exit 1
+            ;;
         esac
+
         install -D rust/target/release/libmages_ffi.so -t "shared/src/jvmMain/resources/$JNA_DIR/"
 
-      - |
-        ./gradlew :desktopApp:createDistributable \
-          --offline --no-daemon --no-configuration-cache --no-build-cache \
-          -Dorg.gradle.java.installations.auto-download=false \
-          -Dorg.gradle.java.installations.auto-detect=true \
-          -Dorg.gradle.java.installations.paths=/usr/lib/sdk/openjdk21/jvm/openjdk-21,/usr/lib/sdk/openjdk25/jvm/openjdk-25
+          # Build desktop app with Gradle (offline)
+      # - ./gradlew clean
+      - ./gradlew :desktopApp:createDistributable --offline --no-daemon --no-configuration-cache --no-build-cache
 
+          # Install to /app
       - mkdir -p /app/lib/mages
       - cp -r desktopApp/build/compose/binaries/main/app/Mages/* /app/lib/mages/
 
+      - |
+        if [ -f cargo/config.toml ]; then
+          sed -i 's|directory = "vendor"|directory = "../vendor"|g' cargo/config.toml || true
+          cat cargo/config.toml
+        fi
+  
       - install -Dm755 mages ${FLATPAK_DEST}/bin/mages
+
       - install -Dm644 fastlane/metadata/android/en-US/images/icon.png /app/share/icons/hicolor/512x512/apps/${FLATPAK_ID}.png
       - install -Dm644 packaging/${FLATPAK_ID}.desktop /app/share/applications/${FLATPAK_ID}.desktop
       - install -Dm644 packaging/${FLATPAK_ID}.metainfo.xml /app/share/metainfo/${FLATPAK_ID}.metainfo.xml
