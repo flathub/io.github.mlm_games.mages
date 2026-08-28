@@ -3,6 +3,7 @@ runtime: org.freedesktop.Platform
 runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 sdk-extensions:
+  - org.freedesktop.Sdk.Extension.openjdk21
   - org.freedesktop.Sdk.Extension.openjdk25
   - org.freedesktop.Sdk.Extension.rust-stable
 command: mages
@@ -20,8 +21,8 @@ finish-args:
 
 build-options:
   env:
-    JAVA_HOME: /usr/lib/sdk/openjdk25
-    PATH: /usr/lib/sdk/openjdk25/bin:/usr/lib/sdk/rust-stable/bin:/app/bin:/usr/bin
+    JAVA_HOME: /usr/lib/sdk/openjdk25/jvm/openjdk-25
+    PATH: /usr/lib/sdk/openjdk25/bin:/usr/lib/sdk/openjdk21/bin:/usr/lib/sdk/rust-stable/bin:/app/bin:/usr/bin
     CARGO_HOME: /run/build/mages/cargo
     CARGO_NET_OFFLINE: 'true'
     GRADLE_USER_HOME: /run/build/mages/gradle-deps
@@ -31,6 +32,7 @@ modules:
   - name: openjdk
     buildsystem: simple
     build-commands:
+      - /usr/lib/sdk/openjdk21/install.sh
       - /usr/lib/sdk/openjdk25/install.sh
 
   - name: mages
