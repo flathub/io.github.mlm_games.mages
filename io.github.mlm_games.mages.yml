@@ -12,11 +12,13 @@ finish-args:
   - --share=ipc
   - --share=network
   - --socket=x11
-  - --device=dri
+  - --device=all # for element-call camera
   - --socket=pulseaudio
   - --filesystem=xdg-download
+  - --filesystem=xdg-run/pipewire-0
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.freedesktop.ScreenSaver # calls bg
 
 build-options:
   env:
