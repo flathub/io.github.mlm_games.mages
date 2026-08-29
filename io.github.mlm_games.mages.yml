@@ -19,6 +19,8 @@ finish-args:
   - --talk-name=org.freedesktop.Notifications
   - --talk-name=org.freedesktop.secrets
   - --talk-name=org.freedesktop.ScreenSaver # calls bg
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --talk-name=com.canonical.dbusmenu
 
 build-options:
   env:
