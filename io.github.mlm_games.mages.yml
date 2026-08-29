@@ -4,13 +4,13 @@ runtime-version: '25.08'
 sdk: org.freedesktop.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk21
+  - org.freedesktop.Sdk.Extension.openjdk25
   - org.freedesktop.Sdk.Extension.rust-stable
 command: mages
 
 finish-args:
   - --share=ipc
   - --share=network
-  # - --socket=fallback-x11 # Test, Portals and PipeWire might need this (xwayland)
   - --socket=x11
   - --device=dri
   - --socket=pulseaudio
@@ -20,25 +20,27 @@ finish-args:
 
 build-options:
   env:
-    JAVA_HOME: /usr/lib/sdk/openjdk21
-    PATH: /usr/lib/sdk/openjdk21/bin:/usr/lib/sdk/rust-stable/bin:/app/bin:/usr/bin
+    JAVA_HOME: /usr/lib/sdk/openjdk25/jvm/openjdk-25
+    PATH: /usr/lib/sdk/openjdk25/bin:/usr/lib/sdk/openjdk21/bin:/usr/lib/sdk/rust-stable/bin:/app/bin:/usr/bin
     CARGO_HOME: /run/build/mages/cargo
     CARGO_NET_OFFLINE: 'true'
     GRADLE_USER_HOME: /run/build/mages/gradle-deps
     RUST_BACKTRACE: '1'
+    ORG_GRADLE_PROJECT_org.gradle.java.installations.auto-download: 'false'
+    ORG_GRADLE_PROJECT_org.gradle.java.installations.paths: /usr/lib/sdk/openjdk21/jvm/openjdk-21,/usr/lib/sdk/openjdk25/jvm/openjdk-25
 
 modules:
   - name: openjdk
     buildsystem: simple
     build-commands:
-      - /usr/lib/sdk/openjdk21/install.sh
+      - /usr/lib/sdk/openjdk25/install.sh
 
   - name: mages
     buildsystem: simple
     sources:
       - type: archive
-        url: https://github.com/mlm-games/Mages/releases/download/4.9.7/mages-4.9.7-vendored-sources.tar.gz
-        sha256: 8562a2244d5d77b629d1ca9c937c93ad21db43a1d8c2d6ac9fd57237bd04539b
+        url: https://github.com/mlm-games/Mages/releases/download/4.10.0/mages-4.10.0-vendored-sources.tar.gz
+        sha256: b1eb32cdbb45f091ed2f22ccdc47094261174c361af70d5c935721d773e1f6e8
         strip-components: 1
         x-checker-data:
           type: json
@@ -54,7 +56,6 @@ modules:
         commands:
           - export PATH=/app/lib/mages/lib/runtime/bin:$PATH
           - exec /app/lib/mages/bin/Mages "$@"
-
 
     build-commands:
           # Setup Cargo to use vendored sources
