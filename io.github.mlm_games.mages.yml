@@ -43,13 +43,19 @@ modules:
         sha256: 3e0d5acd781734b92689b213d38cd86c7bbd01c870db81a85dfeab8565cf0a09
         strip-components: 1
         x-checker-data:
-          type: json
-          url: https://api.github.com/repos/mlm-games/mages/releases/latest
-          tag-query: .tag_name
-          version-query: .tag_name
-          timestamp-query: .published_at
-          url-query: >-
-            .assets[] | select(.name | test("vendored-sources\\.tar\\.gz$")) | .browser_download_url
+        type: json
+        url: https://api.github.com/repos/mlm-games/mages/releases
+        tag-query: >-
+          map(select(.draft == false)) | max_by(.published_at) | .tag_name
+        version-query: >-
+          map(select(.draft == false)) | max_by(.published_at) | .tag_name
+        timestamp-query: >-
+          map(select(.draft == false)) | max_by(.published_at) | .published_at
+        url-query: >-
+          map(select(.draft == false)) | max_by(.published_at) |
+          .assets[] |
+          select(.name | test("vendored-sources\\.tar\\.gz$")) |
+          .browser_download_url
 
       - type: script
         dest-filename: mages
