@@ -39,8 +39,8 @@ modules:
     buildsystem: simple
     sources:
       - type: archive
-        url: https://github.com/mlm-games/Mages/releases/download/4.10.1/mages-4.10.1-vendored-sources.tar.gz
-        sha256: 3e0d5acd781734b92689b213d38cd86c7bbd01c870db81a85dfeab8565cf0a09
+        url: https://github.com/mlm-games/Mages/releases/download/4.11.4/mages-4.11.4-vendored-sources.tar.gz
+        sha256: 0f48d8ffc402a7fc0736a64e3cc9975ece5af7dbd31239db45ab7a9db11c3fb5
         strip-components: 1
         x-checker-data:
           type: json
@@ -103,7 +103,8 @@ modules:
 
           # Build desktop app with Gradle (offline)
       # - ./gradlew clean
-      - ./gradlew :desktopApp:createDistributable --offline --no-daemon --no-configuration-cache --no-build-cache
+      - ./gradlew :desktopApp:createDistributable --offline --no-daemon --no-configuration-cache
+        --no-build-cache
 
           # Install to /app
       - mkdir -p /app/lib/mages
@@ -114,7 +115,7 @@ modules:
           sed -i 's|directory = "vendor"|directory = "../vendor"|g' cargo/config.toml || true
           cat cargo/config.toml
         fi
-  
+
       - install -Dm755 mages ${FLATPAK_DEST}/bin/mages
 
       - install -Dm644 fastlane/metadata/android/en-US/images/icon.png /app/share/icons/hicolor/512x512/apps/${FLATPAK_ID}.png
