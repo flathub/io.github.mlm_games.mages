@@ -40,17 +40,23 @@ modules:
     buildsystem: simple
     sources:
       - type: archive
-        url: https://github.com/mlm-games/Mages/releases/download/4.10.1/mages-4.10.1-vendored-sources.tar.gz
-        sha256: 3e0d5acd781734b92689b213d38cd86c7bbd01c870db81a85dfeab8565cf0a09
+        url: https://github.com/mlm-games/Mages/releases/download/4.11.6/mages-4.11.6-vendored-sources.tar.gz
+        sha256: 5c1036ff1da414b43f2844d8c1edd90c77d74c0cee5856ada2ac6cd3b6e3019f
         strip-components: 1
         x-checker-data:
           type: json
-          url: https://api.github.com/repos/mlm-games/mages/releases/latest
-          tag-query: .tag_name
-          version-query: .tag_name
-          timestamp-query: .published_at
+          url: https://api.github.com/repos/mlm-games/mages/releases
+          tag-query: >-
+            map(select(.draft == false)) | max_by(.published_at) | .tag_name
+          version-query: >-
+            map(select(.draft == false)) | max_by(.published_at) | .tag_name
+          timestamp-query: >-
+            map(select(.draft == false)) | max_by(.published_at) | .published_at
           url-query: >-
-            .assets[] | select(.name | test("vendored-sources\\.tar\\.gz$")) | .browser_download_url
+            map(select(.draft == false)) | max_by(.published_at) |
+            .assets[] |
+            select(.name | test("vendored-sources\\.tar\\.gz$")) |
+            .browser_download_url
 
       - type: script
         dest-filename: mages
@@ -98,7 +104,8 @@ modules:
 
           # Build desktop app with Gradle (offline)
       # - ./gradlew clean
-      - ./gradlew :desktopApp:createDistributable --offline --no-daemon --no-configuration-cache --no-build-cache
+      - ./gradlew :desktopApp:createDistributable --offline --no-daemon --no-configuration-cache
+        --no-build-cache
 
           # Install to /app
       - mkdir -p /app/lib/mages
@@ -109,7 +116,7 @@ modules:
           sed -i 's|directory = "vendor"|directory = "../vendor"|g' cargo/config.toml || true
           cat cargo/config.toml
         fi
-  
+
       - install -Dm755 mages ${FLATPAK_DEST}/bin/mages
 
       - install -Dm644 fastlane/metadata/android/en-US/images/icon.png /app/share/icons/hicolor/512x512/apps/${FLATPAK_ID}.png
