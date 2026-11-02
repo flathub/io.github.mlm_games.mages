@@ -42,8 +42,8 @@ modules:
     sources:
       - type: archive
         url: 
-          https://github.com/mlm-games/Mages/releases/download/5.3.1/mages-5.3.1-vendored-sources.tar.gz
-        sha256: c57b42ee76b2b71665f39bcdb589e8746be5b42ed7b4f0110c0334ded9be0a13
+          https://github.com/mlm-games/Mages/releases/download/5.3.4/mages-5.3.4-vendored-sources.tar.gz
+        sha256: 38b9d0d1a8803e6a1a7988f4cc0e1721efe7eb017e7c74ab4289e4b62d5a8c18
         strip-components: 1
         x-checker-data:
           type: json
