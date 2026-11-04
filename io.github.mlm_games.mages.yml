@@ -22,8 +22,7 @@ finish-args:
 build-options:
   env:
     JAVA_HOME: /usr/lib/sdk/openjdk25/jvm/openjdk-25
-    PATH: 
-      /usr/lib/sdk/openjdk25/bin:/usr/lib/sdk/openjdk21/bin:/usr/lib/sdk/rust-stable/bin:/app/bin:/usr/bin
+    PATH: /usr/lib/sdk/openjdk25/bin:/usr/lib/sdk/openjdk21/bin:/usr/lib/sdk/rust-stable/bin:/app/bin:/usr/bin
     CARGO_HOME: /run/build/mages/cargo
     CARGO_NET_OFFLINE: 'true'
     GRADLE_USER_HOME: /run/build/mages/gradle-deps
@@ -41,9 +40,8 @@ modules:
     buildsystem: simple
     sources:
       - type: archive
-        url: 
-          https://github.com/mlm-games/Mages/releases/download/5.3.4/mages-5.3.4-vendored-sources.tar.gz
-        sha256: 38b9d0d1a8803e6a1a7988f4cc0e1721efe7eb017e7c74ab4289e4b62d5a8c18
+        url: https://github.com/mlm-games/Mages/releases/download/5.3.9/mages-5.3.9-vendored-sources.tar.gz
+        sha256: 552542b7eb53b01384cb5dcaeeeb32c4f6ca8896b853b6fd286bdd43565258c0
         strip-components: 1
         x-checker-data:
           type: json
